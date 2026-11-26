@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kho Lưu Trữ Link</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-hover: #273549;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --danger: #f87171;
+      --success: #34d399;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="search"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #082f49;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .btn-danger {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: rgba(248, 113, 113, 0.28);
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+
+    .form-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .tag-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .tag-pill.active,
+    .tag-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .stats {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      transition: background 0.15s;
+    }
+
+    .link-item:hover {
+      background: var(--card-hover);
+    }
+
+    .link-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .link-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      word-break: break-word;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .link-title:hover {
+      text-decoration: underline;
+    }
+
+    .link-url {
+      font-size: 0.82rem;
+      color: var(--muted);
+      word-break: break-all;
+      margin-bottom: 6px;
+    }
+
+    .link-note {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      white-space: pre-wrap;
+    }
+
+    .link-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: #cbd5e1;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .date-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .link-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+
+    .blurred .link-title,
+    .blurred .link-url,
+    .blurred .link-note {
+      filter: blur(6px);
+      transition: filter 0.2s;
+    }
+
+    .blurred .link-item:hover .link-title,
+    .blurred .link-item:hover .link-url,
+    .blurred .link-item:hover .link-note {
+      filter: none;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .link-item {
+        flex-direction: column;
+      }
+      .link-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Kho Lưu Trữ Link</h1>
+      <div class="header-actions">
+        <button type="button" class="btn-secondary btn-sm" id="toggleBlurBtn">Làm mờ danh sách</button>
+        <button type="button" class="btn-secondary btn-sm" id="exportBtn">Xuất JSON</button>
+        <button type="button" class="btn-secondary btn-sm" id="importBtn">Nhập JSON</button>
+        <input type="file" id="importFile" accept=".json" hidden />
+      </div>
+    </header>
+
+    <section class="card">
+      <form id="linkForm">
+        <input type="hidden" id="editId" />
+        <div class="form-grid">
+          <div class="full-width">
+            <label for="urlInput">Đường dẫn (URL) *</label>
+            <input type="text" id="urlInput" placeholder="Dán link vào đây (ví dụ: https://example.com/...)" required />
+          </div>
+          <div>
+            <label for="titleInput">Tiêu đề / Tên gợi nhớ</label>
+            <input type="text" id="titleInput" placeholder="Để trống sẽ tự lấy tên miền" />
+          </div>
+          <div>
+            <label for="tagsInput">Thẻ phân loại (cách nhau bằng dấu phẩy)</label>
+            <input type="text" id="tagsInput" placeholder="Ví dụ: xem sau, yêu thích, thể loại A" />
+          </div>
+          <div class="full-width">
+            <label for="noteInput">Ghi chú (tùy chọn)</label>
+            <input type="text" id="noteInput" placeholder="Ghi chú thêm để sau này dễ tìm lại..." />
+          </div>
+        </div>
+        <div class="form-footer">
+          <button type="submit" class="btn-primary" id="submitBtn">Lưu link</button>
+          <button type="button" class="btn-secondary" id="cancelEditBtn" hidden>Hủy sửa</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="toolbar">
+      <input type="search" id="searchInput" placeholder="Tìm theo tiêu đề, đường dẫn, thẻ hoặc ghi chú..." />
+      <div class="tag-bar" id="tagBar"></div>
+    </section>
+
+    <div class="stats" id="statsText"></div>
+    <main class="link-list" id="linkList"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "personal_link_vault_v1";
+    let links = loadLinks();
+    let activeTag = "ALL";
+    let isBlurred = false;
+
+    const form = document.getElementById("linkForm");
+    const editIdInput = document.getElementById("editId");
+    const urlInput = document.getElementById("urlInput");
+    const titleInput = document.getElementById("titleInput");
+    const tagsInput = document.getElementById("tagsInput");
+    const noteInput = document.getElementById("noteInput");
+    const submitBtn = document.getElementById("submitBtn");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+    const searchInput = document.getElementById("searchInput");
+    const tagBar = document.getElementById("tagBar");
+    const linkList = document.getElementById("linkList");
+    const statsText = document.getElementById("statsText");
+    const toggleBlurBtn = document.getElementById("toggleBlurBtn");
+    const exportBtn = document.getElementById("exportBtn");
+    const importBtn = document.getElementById("importBtn");
+    const importFile = document.getElementById("importFile");
+
+    function loadLinks() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveLinks() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+    }
+
+    function normalizeUrl(raw) {
+      let trimmed = raw.trim();
+      if (!trimmed) return "";
+      if (!/^https?:\/\//i.test(trimmed)) {
+        trimmed = "https://" + trimmed;
+      }
+      try {
+        const parsed = new URL(trimmed);
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+          return "";
+        }
+        return parsed.href;
+      } catch {
+        return "";
+      }
+    }
+
+    function extractDomain(url) {
+      try {
+        return new URL(url).hostname.replace(/^www\./, "");
+      } catch {
+        return url;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+    }
+
+    function resetForm() {
+      form.reset();
+      editIdInput.value = "";
+      submitBtn.textContent = "Lưu link";
+      cancelEditBtn.hidden = true;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const safeUrl = normalizeUrl(urlInput.value);
+      if (!safeUrl) {
+        alert("Đường dẫn không hợp lệ. Vui lòng nhập link bắt đầu bằng http:// hoặc https://");
+        return;
+      }
+
+      const title = titleInput.value.trim() || extractDomain(safeUrl);
+      const tags = tagsInput.value
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      const note = noteInput.value.trim();
+      const editingId = editIdInput.value;
+
+      if (editingId) {
+        links = links.map((item) =>
+          item.id === editingId
+            ? { ...item, url: safeUrl, title, tags, note }
+            : item
+        );
+      } else {
+        const newItem = {
+          id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+          url: safeUrl,
+          title,
+          tags,
+          note,
+          createdAt: new Date().toISOString()
+        };
+        links.unshift(newItem);
+      }
+
+      saveLinks();
+      resetForm();
+      render();
+    });
+
+    cancelEditBtn.addEventListener("click", resetForm);
+
+    searchInput.addEventListener("input", render);
+
+    toggleBlurBtn.addEventListener("click", () => {
+      isBlurred = !isBlurred;
+      linkList.classList.toggle("blurred", isBlurred);
+      toggleBlurBtn.textContent = isBlurred ? "Hiện rõ danh sách" : "Làm mờ danh sách";
+    });
+
+    exportBtn.addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(links, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `link-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    importBtn.addEventListener("click", () => importFile.click());
+
+    importFile.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(reader.result);
+          if (!Array.isArray(imported)) throw new Error();
+          const existingUrls = new Set(links.map((item) => item.url));
+          let added = 0;
+
+          imported.forEach((item) => {
+            const safeUrl = normalizeUrl(item.url || "");
+            if (safeUrl && !existingUrls.has(safeUrl)) {
+              links.push({
+                id: item.id || Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+                url: safeUrl,
+                title: item.title || extractDomain(safeUrl),
+                tags: Array.isArray(item.tags) ? item.tags : [],
+                note: item.note || "",
+                createdAt: item.createdAt || new Date().toISOString()
+              });
+              existingUrls.add(safeUrl);
+              added++;
+            }
+          });
+
+          saveLinks();
+          render();
+          alert(`Đã nhập thêm ${added} link mới.`);
+        } catch {
+          alert("Tệp JSON không đúng định dạng.");
+        }
+        importFile.value = "";
+      };
+      reader.readAsText(file);
+    });
+
+    function renderTags() {
+      const tagSet = new Set();
+      links.forEach((item) => item.tags.forEach((t) => tagSet.add(t)));
+      const allTags = ["ALL", ...Array.from(tagSet).sort((a, b) => a.localeCompare(b, "vi"))];
+
+      if (activeTag !== "ALL" && !tagSet.has(activeTag)) {
+        activeTag = "ALL";
+      }
+
+      tagBar.innerHTML = allTags
+        .map((tag) => {
+          const label = tag === "ALL" ? "Tất cả" : `#${escapeHtml(tag)}`;
+          const cls = tag === activeTag ? "tag-pill active" : "tag-pill";
+          return `<button type="button" class="${cls}" data-tag="${escapeHtml(tag)}">${label}</button>`;
+        })
+        .join("");
+
+      tagBar.querySelectorAll(".tag-pill").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeTag = btn.dataset.tag;
+          render();
+        });
+      });
+    }
+
+    function render() {
+      renderTags();
+      const q = searchInput.value.trim().toLowerCase();
+
+      const filtered = links.filter((item) => {
+        const matchesTag = activeTag === "ALL" || item.tags.includes(activeTag);
+        if (!matchesTag) return false;
+        if (!q) return true;
+        return (
+          item.title.toLowerCase().includes(q) ||
+          item.url.toLowerCase().includes(q) ||
+          item.note.toLowerCase().includes(q) ||
+          item.tags.some((t) => t.toLowerCase().includes(q))
+        );
+      });
+
+      statsText.textContent = `Hiển thị ${filtered.length} / ${links.length} link đã lưu`;
+
+      if (filtered.length === 0) {
+        linkList.innerHTML = `<div class="empty-state">Chưa có link nào phù hợp.</div>`;
+        return;
+      }
+
+      linkList.innerHTML = filtered
+        .map((item) => {
+          const tagsHtml = item.tags
+            .map((t) => `<span class="badge">#${escapeHtml(t)}</span>`)
+            .join("");
+          const noteHtml = item.note
+            ? `<div class="link-note">${escapeHtml(item.note)}</div>`
+            : "";
+
+          return `
+            <article class="link-item">
+              <div class="link-info">
+                <a class="link-title" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
+                <div class="link-url">${escapeHtml(item.url)}</div>
+                ${noteHtml}
+                <div class="link-meta">
+                  ${tagsHtml}
+                  <span class="date-text">${formatDate(item.createdAt)}</span>
+                </div>
+              </div>
+              <div class="link-actions">
+                <button type="button" class="btn-secondary btn-sm" data-action="copy" data-id="${item.id}">Chép</button>
+                <button type="button" class="btn-secondary btn-sm" data-action="edit" data-id="${item.id}">Sửa</button>
+                <button type="button" class="btn-danger btn-sm" data-action="delete" data-id="${item.id}">Xóa</button>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+
+      linkList.querySelectorAll("button[data-action]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          const target = links.find((item) => item.id === id);
+          if (!target) return;
+
+          if (action === "copy") {
+            navigator.clipboard.writeText(target.url).then(() => {
+              btn.textContent = "Đã chép";
+              setTimeout(() => (btn.textContent = "Chép"), 1200);
+            });
+          } else if (action === "edit") {
+            editIdInput.value = target.id;
+            urlInput.value = target.url;
+            titleInput.value = target.title;
+            tagsInput.value = target.tags.join(", ");
+            noteInput.value = target.note;
+            submitBtn.textContent = "Cập nhật";
+            cancelEditBtn.hidden = false;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } else if (action === "delete") {
+            if (confirm(`Xóa link "${target.title}"?`)) {
+              links = links.filter((item) => item.id !== id);
+              saveLinks();
+              render();
+            }
+          }
+        });
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>
